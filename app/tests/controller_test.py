@@ -1,12 +1,13 @@
 import unittest
-from data import dao
-from controllers import Controller
+from app import dao
+from app.controllers import ArduinoController
 
-class ControllerTest(unittest.TestCase):
+class ArduinoControllerTest(unittest.TestCase):
     def setUp(self):
-        self.arduinoEndpoint = dao.ArduinoEndpoint('Arduino Uno Endpoint')
-        self.controller = Controller(arduinoEndpoint=self.arduinoEndpoint)
+        self.arduinoEndpoint = dao.ArduinoDAO('Arduino Uno Endpoint')
+        self.controller = ArduinoController(arduinoDAO=self.arduinoEndpoint)
 
+    @unittest.skip
     def testAverageGenerator(self):
         averager = self.controller.averageGen()
         next(averager)
@@ -16,11 +17,12 @@ class ControllerTest(unittest.TestCase):
             print(avg)
 
     def testOutStream(self):
-        self.controller.readArduinoStream()
+        for x in self.controller.readArduino():
+            print(f"\nyield value from controller: {x}")
 
 
 if __name__ == '__main__':
-    ctrlTest = ControllerTest()
+    ctrlTest = ArduinoControllerTest()
     ctrlTest.setUp()
     ctrlTest.testAverageGenerator()
     ctrlTest.testOutStream()

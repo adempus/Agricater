@@ -8,12 +8,11 @@ def singleton(cls):
         if cls not in instances:
             instances[cls] = cls(*args, **kwargs)
         return instances[cls]
-
     return _singleton
 
 
 @singleton
-class ArduinoEndpoint(object):
+class ArduinoDAO(object):
     def __init__(self, val):
         self._val = val
         self._ser = serial.Serial('/dev/ttyACM0')

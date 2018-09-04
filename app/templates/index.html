@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+{% block camera %}
+    <div class="container">
+        <h5 style="text-align:center;">My Plant</h5>
+        <img class="resize-img" src="{{ url_for('static', filename='plant.jpg') }}" alt="My Plant"/>
+    </div>
+{% endblock %}
+
+{% block waterpump %}
+    <div class="container">
+        <form action="/">
+            <input type="submit" value="Water Plant">
+        </form>
+    </div>
+{% endblock %}
+
+{% block bokehapp %}
+    <div class="container">
+        {{ bokehscript }}
+    </div>
+{% endblock %}
+
+{#{% block chart1 %}#}
+{#    <div class="container chart1">#}
+{#        {% include 'linked_panning.html' %}#}
+{#    </div>#}
+{#{% endblock %}#}
+{##}
+{#{% block chart2 %}#}
+{#    <div class="container chart2">#}
+{#        {% include 'log_lines.html' %}#}
+{#    </div>#}
+{#{% endblock %}#}

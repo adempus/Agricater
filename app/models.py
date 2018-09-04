@@ -1,9 +1,9 @@
 
 class SensorOutputModel(object):
     def __init__(self):
-        self.temperature = { 'c': int, 'f': int, 'k': int }
-        self.soilMoisture = int
-        self.illuminance = int
+        self.temperature = { 'c': None, 'f': None, 'k': None }
+        self.soilMoisture = None
+        self.illuminance = None
 
     def __str__(self):
         ctemp = self.temperature['c']
