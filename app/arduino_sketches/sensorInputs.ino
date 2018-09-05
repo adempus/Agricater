@@ -1,16 +1,25 @@
 #include <Wire.h>
+// hardwares
+#define pumpPin A3
+#define lightSensorPin A2
+#define soilMoisturePin A1
+#define thermistorPin A0
 
 int thermBeta = 3950;
 int thermResistance = 10;
-// analog inputs
-int thermistorPin = 0; 
-int soilMoisturePin = 1;
-int lightSensorPin = 2;
 
-void setup() {//  Serial.print("Temperature in Kelvin: "+String(kTemp)+"\n");
+// watering options
+bool autoOpt;
+int threshold;
 
+void setup() {
   Serial.begin(9600);
-  // put your setup code here, to run once:
+  pinMode(pumpPin, OUTPUT);
+  pinMode(lightSensorPin, INPUT);
+  pinMode(soilMoisturePin, INPUT);
+  pinMode(thermistorPin, INPUT);
+  autoOpt = true;
+  threshold = 50;
 }
 
 void loop() {
@@ -19,11 +28,25 @@ void loop() {
   long thermVal = 1023 - analogRead(thermistorPin);
   long soilVal = analogRead(soilMoisturePin);
   long lightVal = analogRead(lightSensorPin);
+  activatePump(soilVal);
   String tempOutput = getTempReadings(thermVal);
   String soilOutput = "\"soil_moisture\" : "+String(soilVal)+", ";
   String lightOutput = "\"light_level\" : "+String(normalizeLightVal(lightVal))+" }";
   String json = tempOutput+soilOutput+lightOutput;
   Serial.println(json);
+}
+
+void activatePump(long soilVal) {
+  if (autoOpt) {
+    if (soilVal <= threshold) {
+        Serial.println("Soil moisture less than threshold. Watering plant... ");
+        analogWrite(pumpPin, 1023);
+        // runs the water pump for 10 seconds. 
+        delay(10000);
+    } else {
+        analogWrite(pumpPin, 0);
+    }
+  }
 }
 
 String getTempReadings(long thermVal) {
