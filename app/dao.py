@@ -13,9 +13,9 @@ def singleton(cls):
 
 @singleton
 class ArduinoDAO(object):
-    def __init__(self, val):
-        self._val = val
-        self._ser = serial.Serial('/dev/ttyACM0')
+    def __init__(self, path):
+        self._val = path
+        self._ser = serial.Serial(self._val)
         self._outBytes = None
 
     def openPort(self):

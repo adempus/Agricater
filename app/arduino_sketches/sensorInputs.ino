@@ -10,6 +10,7 @@ int thermResistance = 10;
 
 // watering options
 bool autoOpt;
+char startWater = 'n';
 int threshold;
 
 void setup() {
@@ -18,8 +19,8 @@ void setup() {
   pinMode(lightSensorPin, INPUT);
   pinMode(soilMoisturePin, INPUT);
   pinMode(thermistorPin, INPUT);
-  autoOpt = true;
-  threshold = 50;
+  autoOpt = false;
+  threshold = 20;
 }
 
 void loop() {
@@ -28,7 +29,7 @@ void loop() {
   long thermVal = 1023 - analogRead(thermistorPin);
   long soilVal = analogRead(soilMoisturePin);
   long lightVal = analogRead(lightSensorPin);
-  activatePump(soilVal);
+  shouldWater(soilVal);
   String tempOutput = getTempReadings(thermVal);
   String soilOutput = "\"soil_moisture\" : "+String(soilVal)+", ";
   String lightOutput = "\"light_level\" : "+String(normalizeLightVal(lightVal))+" }";
@@ -36,16 +37,34 @@ void loop() {
   Serial.println(json);
 }
 
-void activatePump(long soilVal) {
+void shouldWater(long soilVal) {
   if (autoOpt) {
+    waterPlant(soilVal);
+  } else {
     if (soilVal <= threshold) {
-        Serial.println("Soil moisture less than threshold. Watering plant... ");
-        analogWrite(pumpPin, 1023);
-        // runs the water pump for 10 seconds. 
-        delay(10000);
+      Serial.println("{\"user\": Soil moisture is below normal. Would you like to water plant? (y or n) }");
+      String response = Serial.readString();
+      response.toLowerCase();
+      startWater = response[0];
+      if (startWater == 'y') {
+        Serial.println("Detected response: "+response);
+        waterPlant(soilVal);
+      }
     } else {
-        analogWrite(pumpPin, 0);
+      analogWrite(pumpPin, 0);
+      startWater = 'n';
     }
+  }
+}
+
+void waterPlant(long soilVal) {
+  if (soilVal <= threshold) {
+    Serial.println("Watering plant... ");
+    analogWrite(pumpPin, 1023);
+    // runs the water pump for 10 seconds.
+    delay(5000);
+  } else {
+     analogWrite(pumpPin, 0);
   }
 }
 

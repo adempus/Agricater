@@ -19,7 +19,7 @@ class ArduinoController(object):
         self._arduinoDAO.closePort()
 
     def readArduino(self):
-        ''' reads a stream of json data incoming from the arduino's attached sensors; into the sensor model.'''
+        ''' update sensor data with incoming json from arduino.'''
         for x in self._arduinoDAO.serialOut():
             try:
                 self._sensorJson = json.loads(x)
@@ -29,8 +29,8 @@ class ArduinoController(object):
                 pass
 
     def averageGen(self):
-        '''generates a running average given a value through .send()'''
-        total = avg = count = 0
+        '''generates a running average '''
+        total, avg, count = 0, 0, 0
         while True:
             val = yield avg
             total += val
@@ -60,7 +60,6 @@ class ArduinoController(object):
         return self._sensorJson
 
     def __updateSensorData(self, data):
-        ''' updates the sensor model with running averages of each value. '''
         self._sensorData.temperature['c'] = round(self._avgGenList[0].send(data['temperature']['c']), 2)
         self._sensorData.temperature['f'] = round(self._avgGenList[1].send(data['temperature']['f']), 2)
         self._sensorData.temperature['k'] = round(self._avgGenList[2].send(data['temperature']['k']), 2)
@@ -98,4 +97,3 @@ class FrontEndController(Thread):
 
     def run(self):
         self.emitArduinoSensorStream()
-

@@ -1,6 +1,8 @@
 import os
-from flask import Flask, render_template, Markup
+
+from flask import Flask, Markup, render_template, jsonify, request
 from bokeh.embed import server_document
+from .plant_data import plant_data
 
 
 def create_app(test_config=None):
@@ -24,11 +26,15 @@ def create_app(test_config=None):
     except OSError:
         pass
 
-    @app.route('/')
+    @app.route('/', methods=['GET', 'POST'])
     def index():
         script = server_document('http://localhost:5006/bok')
-        script = Markup(script)
-        return render_template('index.html', bokehscript=script)
+        return render_template('index.html', bokeh_script=Markup(script), options=plant_data)
+
+    @app.route('/plants', methods=['POST'])
+    def plants():
+        plant_name = request.form['plant_name']
+        return jsonify(plant_data[plant_name])
 
     from . import db
     db.init_app(app)

@@ -1,34 +1,38 @@
 {% extends 'base.html' %}
 
-{% block camera %}
+{% block plant_form %}
     <div class="container">
-        <h5 style="text-align:center;">My Plant</h5>
-        <img class="resize-img" src="{{ url_for('static', filename='plant.jpg') }}" alt="My Plant"/>
-    </div>
-{% endblock %}
+        <form method="post">
 
-{% block waterpump %}
-    <div class="container">
-        <form action="/">
-            <input type="submit" value="Water Plant">
+            <label for="plant-dropdown">Plant Name: </label>
+            <select id="plant-dropdown" name="plant-selection">
+                <option selected id="plant-option" name="plant-option">Choose...</option>
+                {% for option in options %}
+                    <option name="{{ option }}">{{ option }}</option>
+                {% endfor %}
+            </select>
+
+            <script type="text/javascript">
+                $('select#plant-dropdown').on('change', function () {
+                     $.post("http://localhost:5006/bok", {plant_name: $(this).val()});
+                     $.post("/plants", {plant_name: $(this).val()}, function (plant) {
+                        $('.plant-details').html(`
+                            <img class="resize-img" src="/static/${plant.file}" alt="My Plant"/>
+                            <h5><em>${plant.genus} ${plant.species}</em></h5>
+                            <p>${plant.description}</p>
+                        `);
+                    });
+                });
+            </script>
         </form>
+        <div class="plant-details"></div>
     </div>
 {% endblock %}
 
-{% block bokehapp %}
+{% block waterpump %}{% endblock %}
+
+{% block bokeh_app %}
     <div class="container">
-        {{ bokehscript }}
+        {{ bokeh_script }}
     </div>
 {% endblock %}
-
-{#{% block chart1 %}#}
-{#    <div class="container chart1">#}
-{#        {% include 'linked_panning.html' %}#}
-{#    </div>#}
-{#{% endblock %}#}
-{##}
-{#{% block chart2 %}#}
-{#    <div class="container chart2">#}
-{#        {% include 'log_lines.html' %}#}
-{#    </div>#}
-{#{% endblock %}#}
