@@ -1,15 +1,14 @@
-import controllers
-import dao
-
+from dao import ArduinoDAO
+from controllers import ArduinoController
 from datetime import datetime
 from bokeh.layouts import gridplot
 from bokeh.models import HoverTool
 from bokeh.plotting import ColumnDataSource, curdoc, figure
 
 
-arduinoEndpoint = dao.ArduinoDAO("/dev/ttyACM0")
-arduinoController = controllers.ArduinoController(arduinoEndpoint)
-
+# establish arduino communication
+arduinoEndpoint = ArduinoDAO("/dev/ttyACM1")
+arduinoController = ArduinoController(arduinoEndpoint)
 
 # Common Configuration Settings
 COMMON_FIGURE_CONFIG = {'width': 700, 'plot_height': 200, 'x_axis_type': "datetime"}
@@ -30,7 +29,6 @@ light_plot.x_range.follow = "end"
 light_plot.x_range.follow_interval = 60000
 light_plot.x_range.range_padding = 0
 
-
 # Temperature Plot
 temperature_cds = ColumnDataSource({'x': [], 'y': []})
 temperature_plot = figure(y_axis_label='Fahrenheit', x_range=light_plot.x_range, **COMMON_FIGURE_CONFIG)
@@ -38,7 +36,6 @@ temperature_plot.line(source=temperature_cds, line_color='red', **COMMON_LINE_CO
 temperature_plot.circle(source=temperature_cds, fill_color='red', **COMMON_CIRCLE_CONFIG)
 temperature_plot_hover = HoverTool(tooltips=[("value", "@y{0.00}\u2109"), ('date', '@x{%F %T}')], **COMMON_HOVER_CONFIG)
 temperature_plot.add_tools(temperature_plot_hover)
-
 
 # Moisture Plot
 moisture_cds = ColumnDataSource({'x': [], 'y': []})
@@ -58,7 +55,6 @@ def update():
     light_lvl = {'x': [now], 'y': [x.illuminance]}
     temperature_lvl = {'x': [now], 'y': [x.temperature['f']]}
     moisture_lvl = {'x': [now], 'y': [x.soilMoisture]}
-
     light_cds.stream(light_lvl)
     temperature_cds.stream(temperature_lvl)
     moisture_cds.stream(moisture_lvl)

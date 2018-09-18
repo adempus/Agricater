@@ -4,15 +4,15 @@ import json
 
 class ArduinoEndpointTest(unittest.TestCase):
     def setUp(self):
-        self.arduinoEndpoint = dao.ArduinoDAO('Arduino Uno Endpoint')
+        self.arduinoEndpoint = dao.ArduinoDAO("/dev/ttyACM0")
 
-    @unittest.skip
+    # @unittest.skip
     def printStats(self, data):
         print("Temperature: "+str(data['temperature'])+
             "\nsoil_moisture: "+str(data['soil_moisture'])+
             "\nlight_level: "+str(data['light_level']))
 
-    @unittest.skip
+    # @unittest.skip
     def test_serialOut(self):
         for x in self.arduinoEndpoint.serialOut():
             d = dict()
@@ -38,7 +38,7 @@ class ArduinoEndpointTest(unittest.TestCase):
 if __name__ == '__main__':
     aTest = ArduinoEndpointTest()
     aTest.setUp()
-    aTest.test_openPort()
-    aTest.test_closePort()
-    # aTest.test_serialOut()
+    # aTest.test_openPort()
+    # aTest.test_closePort()
+    aTest.test_serialOut()
     # aTest.test_openPort()

@@ -11,8 +11,12 @@ def singleton(cls):
     return _singleton
 
 
+
 @singleton
 class ArduinoDAO(object):
+    ''' A single instance of this class is needed to access the arduino via USB port,
+        and stream its serial output.
+    '''
     def __init__(self, path):
         self._val = path
         self._ser = serial.Serial(self._val)

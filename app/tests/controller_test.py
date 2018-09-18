@@ -4,7 +4,7 @@ from app.controllers import ArduinoController
 
 class ArduinoControllerTest(unittest.TestCase):
     def setUp(self):
-        self.arduinoEndpoint = dao.ArduinoDAO('Arduino Uno Endpoint')
+        self.arduinoEndpoint = dao.ArduinoDAO("/dev/ttyACM0")
         self.controller = ArduinoController(arduinoDAO=self.arduinoEndpoint)
 
     @unittest.skip
@@ -24,6 +24,6 @@ class ArduinoControllerTest(unittest.TestCase):
 if __name__ == '__main__':
     ctrlTest = ArduinoControllerTest()
     ctrlTest.setUp()
-    ctrlTest.testAverageGenerator()
+    # ctrlTest.testAverageGenerator()
     ctrlTest.testOutStream()
 

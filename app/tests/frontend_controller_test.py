@@ -7,7 +7,7 @@ class FrontEndControllerTest(unittest.TestCase):
     def setUp(self):
         self._arduinoDAO = ArduinoDAO("Arduino Endpoint")
         self._arduinoCtrl = ArduinoController(self._arduinoDAO)
-        self._frontEndCtrl = FrontEndController(self._arduinoCtrl, )
+        self._frontEndCtrl = FrontEndController(self._arduinoCtrl)
         self._sensorModel = self._arduinoCtrl.getSensorDataModel()
 
     def testEmitArduinoSensorStream(self):
