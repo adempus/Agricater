@@ -7,6 +7,6 @@ Plant monitoring and watering system with Arduino, a few sensors, Flask &amp; Bo
 ------------------
 
 #### Hardware layout 
-##### *(NOTE: Visual layout is missing the water pump which connects to (V+ V-) on the MOS Module in top-left corner)*
+##### _(NOTE: Visual layout is missing the 5V DC water pump which connects to (V+ V-) on the MOS Module in top-left corner)_
 ![alt text](https://github.com/adempus/Agricater/blob/master/app/res/AgricaterHardwareSketch.png)
 
